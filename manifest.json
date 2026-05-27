@@ -8,5 +8,6 @@
     "default_title": "Nyx",
     "default_panel": "popup.html",
     "open_at_install": true
-  }
+  },
+  "permissions": ["storage"]
 }

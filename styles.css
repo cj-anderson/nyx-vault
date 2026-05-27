@@ -31,42 +31,36 @@ body {
 
   /* smoother breathing room */
   padding: 14px;
-  gap: 12px;
-}
+  gap: 16px;
 
-/* ---------------- LOGO ---------------- */
-
-.logo {
-  margin: 0;
-
-  font-size: clamp(22px, 2.2vw, 28px);
-  font-weight: 600;
-
-  color: #8B5CF6;
-
-  text-align: center;
-
-  letter-spacing: 1px;
-
-  flex-shrink: 0;
+  background: radial-gradient(
+    circle at top,
+    #171A22 0%,
+    #111318 60%
+  );
 }
 
 /* ---------------- INPUT AREA ---------------- */
 
 .input-section {
-  background: #1A1D24;
+  background: linear-gradient(
+    180deg,
+    #1A1D24,
+    #171A22
+  );
 
-  padding: 12px;
+  padding: 14px;
 
-  border-radius: 12px;
+  border-radius: 14px;
 
-  border: 1px solid #2A2F3A;
+  border: 1px solid rgba(139, 92, 246, 0.15);
 
-  flex-shrink: 0;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.35);
 
-  width: 100%;
+  position: relative;
+  z-index: 2;
 }
-
 /* Inputs */
 
 input,
@@ -164,31 +158,36 @@ button.danger:hover {
 /* ---------------- NOTE CARDS ---------------- */
 
 .note {
-  background: #1A1D24;
+  background: linear-gradient(
+    180deg,
+    #1A1D24,
+    #161922
+  );
 
-  border: 1px solid #2A2F3A;
-  border-radius: 12px;
+  border: 1px solid rgba(42, 47, 58, 0.9);
+
+  border-radius: 14px;
 
   padding: 12px;
 
   cursor: pointer;
 
-  /* KEY FIX: prevent overflow */
-  max-width: 100%;
-  overflow: hidden;
-
   transition:
+    transform 0.15s ease,
     background 0.15s ease,
-    transform 0.1s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .note:hover {
-  background: #252A35;
+  background: #1F2430;
 
-  border-color: #8B5CF6;
+  border-color: rgba(139, 92, 246, 0.5);
 
-  transform: translateY(-1px);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35);
+
+  transform: translateY(-2px);
 }
 
 .note strong {
@@ -283,4 +282,12 @@ button.danger:hover {
 
   display: flex;
   gap: 8px;
+}
+
+#notesList {
+  margin-top: 6px;
+}
+
+.note:first-child {
+  margin-top: 6px;
 }
