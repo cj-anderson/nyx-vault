@@ -1,12 +1,12 @@
 {
-    "manifest_version": 3,
-    "name": "Nyx",
-    "version": "0.1",
-    "description": "Local encrypted notes extension",
-    "action": {
-        "default_popup": "popup.html"
-    },
-    "permissions": [
-        "storage"
-    ]
+  "manifest_version": 2,
+  "name": "Nyx",
+  "version": "1.0",
+  "description": "Local encrypted notes and password vault",
+
+  "sidebar_action": {
+    "default_title": "Nyx",
+    "default_panel": "popup.html",
+    "open_at_install": true
+  }
 }

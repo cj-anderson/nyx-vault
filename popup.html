@@ -4,96 +4,34 @@
     <meta charset="UTF-8" />
     <title>Nyx</title>
 
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+    <link rel="stylesheet" href="styles.css" />
 
-      body {
-        font-family: Arial, sans-serif;
-        width: 300px;
-        margin: 0;
-        padding: 10px;
-        overflow-x: hidden;
-      }
-
-      h3 {
-        margin-top: 0;
-      }
-
-      input {
-        width: 100%;
-        margin-bottom: 6px;
-        padding: 6px;
-      }
-
-      button {
-        width: 100%;
-        padding: 6px;
-        cursor: pointer;
-      }
-
-      .note {
-        border: 1px solid #ccc;
-        padding: 8px;
-        margin-top: 8px;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-
-      .note:hover {
-        background: #f3f3f3;
-      }
-
-      /* Modal */
-
-      #modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-
-        background: rgba(0, 0, 0, 0.5);
-
-        display: none;
-
-        justify-content: center;
-        align-items: center;
-      }
-
-      #modal.show {
-        display: flex;
-      }
-
-      #modalBox {
-        background: white;
-        padding: 10px;
-        width: 90%;
-        border-radius: 8px;
-
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-
-      #modalBox button {
-        margin-top: 6px;
-      }
-
-      #modalContent {
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-    </style>
+    <!-- Inconsolata Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
-    <h3>Nyx</h3>
+    <h1 class="logo">Nyx</h1>
 
-    <input id="titleInput" placeholder="Title (optional)" />
-    <input id="contentInput" placeholder="Write a note..." />
+    <div class="input-section">
+      <input
+        id="titleInput"
+        placeholder="Title (optional)"
+      />
 
-    <button id="saveBtn">Save</button>
+      <textarea
+        id="contentInput"
+        placeholder="Write a note..."
+        rows="4"
+      ></textarea>
+
+      <button id="saveBtn">
+        Save Note
+      </button>
+    </div>
 
     <div id="notesList"></div>
 
@@ -101,12 +39,19 @@
 
     <div id="modal">
       <div id="modalBox">
-        <h3 id="modalTitle"></h3>
+        <h2 id="modalTitle"></h2>
 
         <p id="modalContent"></p>
 
-        <button id="closeBtn">Close</button>
-        <button id="deleteBtn">Delete</button>
+        <div class="modal-buttons">
+          <button id="closeBtn">
+            Close
+          </button>
+
+          <button id="deleteBtn" class="danger">
+            Delete
+          </button>
+        </div>
       </div>
     </div>
 
