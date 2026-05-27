@@ -9,10 +9,20 @@ function initNyx() {
   const modal = document.getElementById("modal");
   const modalTitle = document.getElementById("modalTitle");
   const modalContent = document.getElementById("modalContent");
+
   const closeBtn = document.getElementById("closeBtn");
   const deleteBtn = document.getElementById("deleteBtn");
 
+  /* NEW: Tabs */
+  const tabUnsecured = document.getElementById("tabUnsecured");
+  const tabSecured = document.getElementById("tabSecured");
+
   let activeNoteId = null;
+  let isEditing = false;
+  let currentTab = "unsecured";
+
+  let isUnlocked = false;
+  let masterKey = null;
 
   /* ---------------- STORAGE ---------------- */
 
@@ -29,14 +39,21 @@ function initNyx() {
 
   async function saveNote() {
     const content = contentInput.value.trim();
+    const title = titleInput.value.trim();
+
     if (!content) return;
 
     const notes = await getNotes();
 
     const newNote = {
       id: crypto.randomUUID(),
-      title: titleInput.value.trim(),
-      content
+      title: title || "",
+      content,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      pinned: false,
+      tags: [],
+      secured: currentTab === "secured"
     };
 
     notes.push(newNote);
@@ -50,10 +67,36 @@ function initNyx() {
 
   saveBtn.addEventListener("click", saveNote);
 
+  /* ---------------- TAB SWITCHING ---------------- */
+
+  tabUnsecured.addEventListener("click", () => {
+    currentTab = "unsecured";
+
+    tabUnsecured.classList.add("active");
+    tabSecured.classList.remove("active");
+
+    loadNotes();
+  });
+
+  tabSecured.addEventListener("click", () => {
+    currentTab = "secured";
+
+    tabSecured.classList.add("active");
+    tabUnsecured.classList.remove("active");
+
+    loadNotes();
+  });
+
   /* ---------------- LOAD NOTES ---------------- */
 
   async function loadNotes() {
-    const notes = await getNotes();
+    const allNotes = await getNotes();
+
+    const notes = allNotes.filter(note =>
+      currentTab === "secured"
+        ? note.secured
+        : !note.secured
+    );
 
     list.innerHTML = "";
 
@@ -92,25 +135,74 @@ function initNyx() {
 
   function openNote(note) {
     activeNoteId = note.id;
+    isEditing = false;
 
+    renderView(note);
+
+    modal.classList.add("show");
+  }
+
+  function renderView(note) {
     modalTitle.textContent = note.title || "Untitled";
     modalContent.textContent = note.content || "";
 
-    modal.classList.add("show");
+    modalContent.contentEditable = false;
+    modalContent.style.outline = "none";
+  }
+
+  function enterEditMode(note) {
+    isEditing = true;
+
+    modalTitle.textContent = "Editing…";
+    modalContent.textContent = note.content || "";
+
+    modalContent.contentEditable = true;
+    modalContent.focus();
   }
 
   function closeModal() {
     modal.classList.remove("show");
     activeNoteId = null;
+    isEditing = false;
   }
 
   closeBtn.addEventListener("click", closeModal);
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
+    if (e.target === modal) closeModal();
   });
+
+  /* ---------------- EDIT (BUTTON-DRIVEN) ---------------- */
+
+  async function handleEdit() {
+    if (!activeNoteId) return;
+
+    const notes = await getNotes();
+    const index = notes.findIndex(n => n.id === activeNoteId);
+
+    if (index === -1) return;
+
+    const note = notes[index];
+
+    if (!isEditing) {
+      enterEditMode(note);
+      return;
+    }
+
+    // SAVE EDIT
+    notes[index] = {
+      ...note,
+      content: modalContent.textContent,
+      updatedAt: Date.now()
+    };
+
+    await setNotes(notes);
+
+    isEditing = false;
+
+    renderView(notes[index]);
+    loadNotes();
+  }
 
   /* ---------------- DELETE ---------------- */
 
@@ -124,6 +216,27 @@ function initNyx() {
 
     closeModal();
     loadNotes();
+  });
+
+  /* ---------------- KEYBOARD SHORTCUTS ---------------- */
+
+  document.addEventListener("keydown", (e) => {
+    if (!modal.classList.contains("show")) return;
+
+    if (e.key === "Escape") {
+      closeModal();
+    }
+
+    if (e.ctrlKey && e.key === "e") {
+      e.preventDefault();
+      const note = { id: activeNoteId };
+      handleEdit(note);
+    }
+
+    if (e.ctrlKey && e.key === "s") {
+      e.preventDefault();
+      if (isEditing) handleEdit();
+    }
   });
 
   /* ---------------- INIT ---------------- */
